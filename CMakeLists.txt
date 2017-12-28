@@ -11,6 +11,13 @@ endif ()
 set_common_cxx_flags_for_redex()
 add_dependent_packages_for_redex()
 
+# Fix a bug in json searcher module, incorrect include path.
+string(REPLACE
+    "jsoncpp/jsoncpp"
+    "jsoncpp"
+    JSONCPP_INCLUDE_DIRS
+    "${JSONCPP_INCLUDE_DIRS}")
+
 file(GLOB includes
         "libredex"
         "opt/*"
