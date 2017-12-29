@@ -60,11 +60,12 @@ add_executable(redex-all ${redex_all_srcs})
 
 target_link_libraries(redex-all
         ${Boost_LIBRARIES}
-        ${JSONCPP_LIBRARY}
+        ${JSONCPP_LIBRARY_STATIC}
         ${ZLIB_LIBRARIES}
         Threads::Threads
         redex-lib
         resource
+        -static-libstdc++
         )
 
 target_compile_definitions(redex-all PRIVATE)

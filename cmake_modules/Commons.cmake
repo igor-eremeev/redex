@@ -25,15 +25,15 @@ macro(set_common_cxx_flags_for_redex)
 endmacro()
 
 macro(add_dependent_packages_for_redex)
+    set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_STATIC_RUNTIME ON)
+    set(Boost_USE_MULTITHREADED ON)
     find_package(Boost 1.56.0 REQUIRED COMPONENTS regex filesystem program_options iostreams)
     print_dirs("${Boost_INCLUDE_DIRS}" "Boost_INCLUDE_DIRS")
     print_dirs("${Boost_LIBRARIES}" "Boost_LIBRARIES")
 
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
-    set(Boost_USE_MULTITHREADED ON)
-
     find_package(JsonCpp 0.10.5 REQUIRED)
+    print_dirs("${JSONCPP_LIBRARY_STATIC}" "JSONCPP_LIBRARY_STATIC")
     print_dirs("${JSONCPP_INCLUDE_DIRS}" "JSONCPP_INCLUDE_DIRS")
     print_dirs("${JSONCPP_LIBRARY}" "JSONCPP_LIBRARY")
 
