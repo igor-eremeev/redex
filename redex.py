@@ -242,7 +242,7 @@ def zipalign(unaligned_apk_path, output_apk_path, ignore_zipalign):
         zipalign = ['zipalign']
     try:
         subprocess.check_call(zipalign +
-                              ['4', unaligned_apk_path, output_apk_path])
+                              ['-p', '4', unaligned_apk_path, output_apk_path])
     except subprocess.CalledProcessError:
         print("Couldn't find zipalign. See README.md to resolve this.")
         if not ignore_zipalign:
