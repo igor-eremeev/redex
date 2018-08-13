@@ -19,7 +19,8 @@
 namespace redex {
 namespace proguard_parser {
 
-void parse_file(const std::string filename, ProguardConfiguration* pg_config);
+void parse_file(const std::string filename, ProguardConfiguration* pg_config,
+                std::string nested_path = "");
 void parse(istream& config, ProguardConfiguration* pg_config);
 
 } // namespace proguard_parser

@@ -978,29 +978,46 @@ void parse(istream& config, ProguardConfiguration* pg_config) {
   }
 }
 
-void parse_file(const std::string filename, ProguardConfiguration* pg_config) {
-
-  ifstream config(filename);
+void parse_file(const std::string filename, ProguardConfiguration* pg_config,
+                std::string nested_path /* = "" */) {
+  const std::string file = nested_path.empty()
+      ? filename
+      : nested_path + "/" + filename;
+  ifstream config(file);
   // First try relative path.
   if (!config.is_open()) {
     // Try with -basedirectory
-    config.open(pg_config->basedirectory + "/" + filename);
+    config.open(pg_config->basedirectory + "/" + file);
     if (!config.is_open()) {
       cerr << "ERROR: Failed to open ProGuard configuration file "
-           << filename << endl;
+           << file << endl;
       exit(1);
     }
   }
 
+  const auto our_includes_begin = pg_config->includes.size();
   parse(config, pg_config);
-  // Parse the included files.
-  for (const auto& included_filename : pg_config->includes) {
+
+  // Calculate new nested path.
+  std::string new_nested_path = nested_path;
+  if (filename.length() > 0 && filename[0] != '/') {
+    const auto last_slash = filename.find_last_of('/');
+    if (last_slash != std::string::npos) {
+      const std::string suffix = filename.substr(0, last_slash);
+      new_nested_path = new_nested_path.empty()
+          ? suffix
+          : new_nested_path + "/" + suffix;
+    }
+  }
+  // Parse the newly included files.
+  for (auto i = our_includes_begin; i < pg_config->includes.size(); ++i) {
+    const auto& included_filename = pg_config->includes[i];
     if (pg_config->already_included.find(included_filename) !=
         pg_config->already_included.end()) {
       continue;
     }
     pg_config->already_included.emplace(included_filename);
-    parse_file(included_filename, pg_config);
+    parse_file(included_filename, pg_config, new_nested_path);
   }
 }
 
